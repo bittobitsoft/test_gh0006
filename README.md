@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Northstar Market - Next.js SSR task
 
-## Getting Started
+A compact product catalog built with the Next.js App Router and TypeScript. Product data comes from [FakeStoreAPI](https://fakestoreapi.com), and all product views are rendered by Server Components.
 
-First, run the development server:
+## Run locally
 
 ```bash
+npm install
+copy .env.example .env.local
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`. The root route forwards to `/products`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Set both environment variables in `.env.local` before using the protected admin route:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `ADMIN_PASSWORD` - the password accepted at `/login`
+- `ADMIN_SESSION_TOKEN` - a long, random server-only token stored in the HTTP-only session cookie
 
-## Learn More
+For Vercel, add the same two variables under **Project Settings -> Environment Variables** before deploying.
 
-To learn more about Next.js, take a look at the following resources:
+## Routes and rendering decisions
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Route | Rendering | Why |
+| --- | --- | --- |
+| `/products?page=` | SSR Server Component | `searchParams` is read on the server to calculate the requested page and return the first HTML response. |
+| `/products/[id]` | SSR Server Component | The route fetches the requested product on the server; `generateMetadata` uses that actual product data. Missing products call `notFound()`. |
+| `/admin` | SSR Server Component | The HTTP-only cookie is checked on the server before any admin UI is rendered. Invalid sessions redirect to `/login`. |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+`/login` is a small supporting authentication route, not a catalog page. Its Server Action issues the secure session cookie only after the configured password succeeds.
 
-## Deploy on Vercel
+## Caching choice
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This project intentionally uses the established fetch-cache model available in Next.js 16 with Cache Components left disabled. FakeStoreAPI requests use `cache: "force-cache"` and `next: { revalidate: 300 }` in `lib/products.ts`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+That is a five-minute ISR-style data cache: the pages still render on the server for each request, while the shared public catalog data is not fetched upstream repeatedly. This is a practical tradeoff for FakeStoreAPI's mostly static demo inventory. Development mode intentionally bypasses the persistent cache, which is normal Next.js behavior.
+
+If the upstream API is unavailable, a small local fallback catalog keeps the demo navigable; the live API remains the first-choice data source.
+
+## Loading and error handling
+
+`app/products/loading.tsx` provides a route loading skeleton. `app/products/error.tsx` is a client error boundary with a retry action for upstream API failures. `app/not-found.tsx` is the custom 404 UI used when an unknown product id is requested.
+
+## Useful commands
+
+```bash
+npm run lint
+npm run build
+npm run start
+```
+
+## SSR decisions table for submission
+
+| Page | SSR / ISR / CSR | Reason |
+| --- | --- | --- |
+| `/products` | SSR + cached data | Server-side query pagination, with FakeStoreAPI data revalidated every five minutes. |
+| `/products/[id]` | SSR + cached data | Dynamic product view and metadata are resolved from product data on the server. |
+| `/admin` | SSR | The session is validated from an HTTP-only cookie on the server before the page renders. |

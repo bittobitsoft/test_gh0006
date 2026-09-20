@@ -1,0 +1,8 @@
+import Link from "next/link";
+import { SiteHeader } from "@/components/site-header";
+import { createAdminSession } from "./actions";
+
+export default async function LoginPage({ searchParams }: PageProps<"/login">) {
+  const invalid = (await searchParams).error === "invalid";
+  return <div className="min-h-screen bg-slate-50"><SiteHeader /><main className="grid min-h-[70vh] place-items-center px-6 py-12"><form action={createAdminSession} className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 shadow-sm"><span aria-hidden="true" className="grid size-11 place-items-center rounded-xl bg-indigo-50 text-xl text-indigo-700">⌑</span><h1 className="mt-5 text-2xl font-bold text-slate-950">Admin sign in</h1><p className="mt-2 text-sm leading-6 text-slate-600">Enter the administrator password configured for this deployment.</p>{invalid && <p role="alert" className="mt-4 rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-800">Invalid credentials or missing environment configuration.</p>}<label htmlFor="password" className="mt-6 block text-sm font-semibold text-slate-700">Password</label><input id="password" name="password" type="password" required className="mt-2 w-full rounded-lg border border-slate-300 px-3 py-2.5 outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100" /><button className="mt-5 w-full rounded-lg bg-slate-950 px-4 py-3 text-sm font-semibold text-white hover:bg-indigo-600">Sign in securely</button><Link href="/products" className="mt-5 block text-center text-sm font-medium text-slate-600 hover:text-slate-950">Return to products</Link></form></main></div>;
+}

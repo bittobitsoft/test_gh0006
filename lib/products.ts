@@ -24,12 +24,16 @@ async function request<T>(url: string): Promise<T> {
   return response.json() as Promise<T>;
 }
 
-/** Loads the live catalog; an unavailable upstream intentionally appears as an empty catalog. */
+/**
+ * Loads the live catalog and preserves the original failure for the route error boundary.
+ * Logging here makes the real upstream status visible in Vercel Runtime Logs.
+ */
 export async function getProducts(): Promise<Product[]> {
   try {
     return await request<Product[]>(API_URL);
-  } catch {
-    return [];
+  } catch (error) {
+    console.error("FakeStoreAPI catalog request failed", error);
+    throw error;
   }
 }
 

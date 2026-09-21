@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import { ProductCard } from "@/components/product-card";
 import { SiteHeader } from "@/components/site-header";
 import { getProducts } from "@/lib/products";
@@ -18,7 +17,26 @@ export default async function ProductsPage({
 }: PageProps<"/products">) {
   const page = parsePage((await searchParams).page);
   const products = await getProducts();
-  if (!products.length) notFound();
+  if (!products.length) {
+    return (
+      <div className="min-h-screen bg-slate-50">
+        <SiteHeader />
+        <main className="grid min-h-[calc(100vh-73px)] place-items-center px-6">
+          <section className="max-w-md text-center">
+            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-indigo-700">
+              Catalog empty
+            </p>
+            <h1 className="mt-3 text-3xl font-bold tracking-tight text-slate-950">
+              No products are available right now.
+            </h1>
+            <p className="mt-4 leading-7 text-slate-600">
+              Please check back shortly.
+            </p>
+          </section>
+        </main>
+      </div>
+    );
+  }
   const totalPages = Math.ceil(products.length / PAGE_SIZE);
   const currentPage = Math.min(page, totalPages);
   const visibleProducts = products.slice(

@@ -9,13 +9,16 @@ export const metadata: Metadata = {
   description: "A server-rendered product catalog powered by FakeStoreAPI.",
 };
 
+/** Wraps every route with the document shell and the shared application metadata. */
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html
-      lang="en"
-      className="h-full antialiased"
-    >
-      <body className="min-h-full flex flex-col" style={{ fontFamily: "Arial, Helvetica, sans-serif" }}>{children}</body>
+    <html lang="en" className="h-full antialiased">
+      <body
+        className="min-h-full flex flex-col"
+        style={{ fontFamily: "Arial, Helvetica, sans-serif" }}
+      >
+        {children}
+      </body>
     </html>
   );
 }

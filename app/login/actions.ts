@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { SESSION_COOKIE } from "@/lib/auth";
 
+/** Validates credentials, then creates a short-lived HTTP-only session before redirecting to admin. */
 export async function createAdminSession(formData: FormData) {
   const password = formData.get("password");
   const expectedPassword = process.env.ADMIN_PASSWORD;
@@ -26,6 +27,7 @@ export async function createAdminSession(formData: FormData) {
   redirect("/admin");
 }
 
+/** Removes the session cookie so a later visit to /admin must authenticate again. */
 export async function logoutAdmin() {
   (await cookies()).delete(SESSION_COOKIE);
   redirect("/login");

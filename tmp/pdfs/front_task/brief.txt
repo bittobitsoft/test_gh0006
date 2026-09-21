@@ -1,0 +1,78 @@
+                          E
+ nd Developer-Front    
+
+                                                       
+(SSR) Side Rendering-Server -- js.Next
+
+                                                                                                                
+   
+
+                                                                             .1
+
+                                            Next.js         
+
+                                                             .2
+
+                                                                        App Router --   Next.js 14 
+                                                                                     TypeScript 
+
+                                                          UI    Tailwind CSS 
+                          https://fakestoreapi.com -- (  ) FakeStoreAPI :  
+
+                                                  Git    Vercel   
+
+                                           (  )    .3
+
+     
+:  3   SSR           .1
+            Server Component     API     :(products/)    .2
+                                                    
+.    Query Param (?page=)   Pagination
+           ( )         :(products/[id]/)    .3
+
+     Redirect       .     generateMetadata
+                                                                                                                
+. 404
+
+    Server  Middleware)    Cookie      :(admin/)    .4
+   .
+       --         Redirect   (Component
+
+                                                                                                           
+:   .5
+   (force-cache /    revalidate /  )        
+
+                                                                                              .README   
+        (loading.tsx / error.tsx)  Error  Loading  
+
+                                                                                                      . API  
+  .       Tailwind Next.js     (Starter Repo)      :
+
+                        (SSR  )     .4
+
+                 .  Commit   --      Commits : Git  
+   (Cache  ) Starter Repo            
+
+                                                                                  .    
+                                                                                        
+  /SSR)              
+    (ISR/CSR
+                  products/
+              [id]/products/
+
+                      admin/
+
+                              (Deliverables)   .5
+
+    commit --   Commits  () Git   
+                                                        (Vercel)    
+
+         Caching      : README.md  
+                          ( 8-5)    
+                                                         (4 )  'SSR '   
+
+                                                          .6
+
+                                                                              
+     
+

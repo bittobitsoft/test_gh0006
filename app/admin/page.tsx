@@ -3,6 +3,7 @@ import { SiteHeader } from "@/components/site-header";
 import { isAdminSessionValid } from "@/lib/auth";
 import { logoutAdmin } from "@/app/login/actions";
 
+/** Verifies the session on the server before rendering any protected admin content. */
 export default async function AdminPage() {
   if (!(await isAdminSessionValid())) redirect("/login");
   const cards = [
@@ -17,7 +18,7 @@ export default async function AdminPage() {
         <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-start">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.16em] text-indigo-700">
-              Restricted area
+              Settings
             </p>
             <h1 className="mt-3 text-4xl font-bold tracking-tight text-slate-950">
               Admin overview
@@ -26,15 +27,14 @@ export default async function AdminPage() {
           <form action={logoutAdmin}>
             <button
               type="submit"
-              className="rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-950 hover:text-slate-950"
+              className="rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-950 hover:text-slate-950 cursor-pointer"
             >
               Log out
             </button>
           </form>
         </div>
         <p className="mt-4 max-w-2xl text-lg text-slate-600">
-          This page is guarded by a server-side, HTTP-only session check. No
-          client-side gate is used.
+          Some statistics useful to management
         </p>
         <section className="mt-10 grid gap-5 md:grid-cols-3">
           {cards.map(({ label, value, icon }) => (

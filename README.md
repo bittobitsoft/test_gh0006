@@ -35,7 +35,7 @@ This project intentionally uses the established fetch-cache model available in N
 
 That is a five-minute ISR-style data cache: the pages still render on the server for each request, while the shared public catalog data is not fetched upstream repeatedly. This is a practical tradeoff for FakeStoreAPI's mostly static demo inventory. Development mode intentionally bypasses the persistent cache, which is normal Next.js behavior.
 
-If the upstream API is unavailable, a small local fallback catalog keeps the demo navigable; the live API remains the first-choice data source.
+If the upstream API is unavailable or returns no products, the catalog renders a centered unavailable message instead of substitute product data.
 
 ## Loading and error handling
 
